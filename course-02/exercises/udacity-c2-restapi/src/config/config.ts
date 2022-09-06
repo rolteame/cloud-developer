@@ -10,7 +10,7 @@ export const config = {
     "aws_media_bucket": process.env.AWS_MEDIA_BUCKET/*"udagram-adebiyi-dev"*/
   },
   "jwt": {
-    "secret": " "
+    "secret": "helloworld"
   },
   "prod": {
     "username": "",
