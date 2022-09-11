@@ -1,5 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import * as jwt from 'jsonwebtoken';
+import { Router, Request, Response } from 'express';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
 (async () => {
@@ -9,6 +11,17 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   // Set the network port
   const port = process.env.PORT || 8082;
+
+  //JWT Secret
+  const jwtSecret = {
+    secret: 'newSecret'
+  }
+
+  async function generateToken(url: any) {
+    const token = await jwt.sign(url, jwtSecret.secret)
+    console.log(token)
+    return token
+  }
   
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
@@ -28,14 +41,14 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
   /**************************************************************************** */
-  app.get("/filteredimage", async (req, res) => {
+  app.get("/filteredimage", async (req: Request, res: Response) => {
     // console.log(req.query.image_url)
     const {image_url} = req.query;
     
     if(!image_url) {
       return res.status(400).send('Please Enter a Valid URL')
     }
-
+    generateToken(image_url);
     const filteredImage: string = await filterImageFromURL(image_url);
     console.log(filteredImage)
 
